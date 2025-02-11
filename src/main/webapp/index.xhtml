@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <title>Lab 3</title>
+    <h:outputStylesheet name="src/css/style.css"/>
+</h:head>
+<h:body>
+
+    <header>Трикашный Михаил Дмитриевич | P3206 | 115234</header>
+    <hr/>
+    <h:button value="На главную" id="on-main-button" action="on-main"/>
+    <div align="center">
+        <canvas width="500px" height="500px" id="clock"/>
+    </div>
+    <h1 id="date" align="center"></h1>
+    <h:outputScript library="src" name="js/clock.js"/>
+    <h:outputScript library="src" name="js/date.js"/>
+</h:body>
+
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Main</title>
+    <h:outputStylesheet name="src/css/style.css"/>
+</h:head>
+<h:body>
+    <h:form id="myForm">
+        <header>
+            Трикашный Михаил Дмитриевич P3206 115234
+        </header>
+        <div class="x-input">
+            <fieldset>
+                <legend class="highlighted">Выберите X:</legend>
+<!--                <h:outputText id="x" name="x" value="#{actual.x}" required="true"/>-->
+                <h:commandButton value="-2.0" type="button" styleClass="x-button">
+                    <f:ajax render="x" listener="#{actual.setX(-2)}"/>
+                </h:commandButton>
+                <h:commandButton value="-1.5" type="button" styleClass="x-button">
+                    <f:ajax render="x" listener="#{actual.setX(-1.5)}"/>
+                </h:commandButton>
+                <h:commandButton value="-1.0" type="button" styleClass="x-button">
+                    <f:ajax render="x" listener="#{actual.setX(-1)}"/>
+                </h:commandButton>
+                <h:commandButton value="-0.5" type="button" styleClass="x-button">
+                    <f:ajax render="x" listener="#{actual.setX(-0.5)}"/>
+                </h:commandButton>
+                <h:commandButton value="0" type="button" styleClass="x-button">
+                    <f:ajax render="x" listener="#{actual.setX(0)}"/>
+                </h:commandButton>
+                <h:commandButton value="0.5" type="button" styleClass="x-button">
+                    <f:ajax render="x" listener="#{actual.setX(0.5)}"/>
+                </h:commandButton>
+                <h:commandButton value="1.0" type="button" styleClass="x-button">
+                    <f:ajax render="x" listener="#{actual.setX(1)}"/>
+                </h:commandButton>
+                <h:commandButton value="1.5" type="button" styleClass="x-button">
+                    <f:ajax render="x" listener="#{actual.setX(1.5)}"/>
+                </h:commandButton>
+                <h:commandButton value="2.0" type="button" styleClass="x-button">
+                    <f:ajax render="x" listener="#{actual.setX(2)}"/>
+                </h:commandButton>
+            </fieldset>
+        </div>
+        <div class="y-input">
+            <fieldset>
+                <legend class="highlighted">Выберите Y:</legend>
+                <p:inputText name="y" id="y" value="#{actual.y}" converter="yConverter" validator="yValidator"/>
+            </fieldset>
+        </div>
+        <div class="r-input">
+            <fieldset>
+                <legend class="highlighted">Выберите R:</legend>
+                <p:selectBooleanCheckbox id="checkbox1" value="#{r.checkboxes[0]}" onchange="graphSetup(1)" >
+                    <p:ajax update="checkbox2 checkbox3 checkbox4 checkbox5" listener="#{r.selectCheckbox(0)}"/>
+                </p:selectBooleanCheckbox>
+                <h:outputLabel for="checkbox1" value="1" />
+
+                <p:selectBooleanCheckbox id="checkbox2" value="#{r.checkboxes[1]}" onchange="graphSetup(2)">
+                    <p:ajax update="checkbox1 checkbox3 checkbox4 checkbox5" listener="#{r.selectCheckbox(1)}"/>
+                </p:selectBooleanCheckbox>
+                <h:outputLabel for="checkbox2" value="2" />
+
+                <p:selectBooleanCheckbox id="checkbox3" value="#{r.checkboxes[2]}" onchange="graphSetup(3)">
+                    <p:ajax update="checkbox1 checkbox2 checkbox4 checkbox5" listener="#{r.selectCheckbox(2)}"/>
+                </p:selectBooleanCheckbox>
+                <h:outputLabel for="checkbox3" value="3" />
+
+                <p:selectBooleanCheckbox id="checkbox4" value="#{r.checkboxes[3]}" onchange="graphSetup(4)">
+                    <p:ajax update="checkbox1 checkbox2 checkbox3 checkbox5" listener="#{r.selectCheckbox(3)}"/>
+                </p:selectBooleanCheckbox>
+                <h:outputLabel for="checkbox4" value="4" />
+
+                <p:selectBooleanCheckbox id="checkbox5" value="#{r.checkboxes[4]}" onchange="graphSetup(5)">
+                    <p:ajax update="checkbox1 checkbox2 checkbox3 checkbox4" listener="#{r.selectCheckbox(4)}"/>
+                </p:selectBooleanCheckbox>
+                <h:outputLabel for="checkbox5" value="5" />
+
+            </fieldset>
+        </div>
+        <div id="graph-div">
+            <canvas id="graph" width="300" height="300"></canvas>
+        </div>
+        <h:commandButton styleClass="submitButton" value="Проверить" action="#{actual.submit()}">
+            <f:ajax execute="@form" render="growl table" />
+        </h:commandButton>
+        <h:commandButton styleClass="submitButton"  value="Устал?" action="on-index"/>
+        <div id="result-wrapper">
+            <p:dataTable id="table" value="#{resultsList.results}" var="attempt" styleClass="table">
+                <p:column headerText="X">
+                    <h:outputText value="#{attempt.x}">
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Y">
+                    <h:outputText value="#{attempt.y}">
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="R">
+                    <h:outputText value="#{attempt.r}"/>
+                </p:column>
+                <p:column headerText="Результат" styleClass="#{attempt.isHit ? 'result-yes' : 'result-no'}">
+                    <h:outputText value="#{attempt.isHit ? 'Попал' : 'Не попал' }"/>
+                </p:column>
+            </p:dataTable>
+        </div>
+    </h:form>
+    <p:growl id="growl" showDetail="false"/>
+</h:body>
+
+<h:outputScript library="src" name="js/main.js"/>
+<h:outputScript>
+    document.addEventListener("DOMContentLoaded", function () {
+        graphSetup(#{actual.r});
+    });
+</h:outputScript>
+
+</html>
