@@ -1,4 +1,4 @@
-package trikesh.lab3_dup.validators;
+package trikesh.lab3.validators;
 
 
 import jakarta.faces.application.FacesMessage;

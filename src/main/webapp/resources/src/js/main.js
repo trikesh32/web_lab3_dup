@@ -1,11 +1,16 @@
 var actual_r = null;
+var actual_data = null;
 
 function graphSetup(r) {
-    if (actual_r === r) {
-        actual_r = null;
-        r = "R"
+    if (r !== undefined) {
+        if (actual_r === r) {
+            actual_r = null;
+            r = "R"
+        } else {
+            actual_r = r;
+        }
     } else {
-        actual_r = r;
+        r = actual_r == null ? "R":actual_r;
     }
     const canvas = document.getElementById('graph');
 
@@ -71,10 +76,56 @@ function graphSetup(r) {
         ctx.fillText("-R/2", -15, R / 2);
         ctx.fillText("-R", -15, R);
     }
-
     ctx.fillText("X", canvas.width / 2 - 10, 15);
     ctx.fillText("Y", -15, -canvas.height / 2 + 10);
+
+    if (actual_data != null){
+        for (let result of actual_data){
+            if (result["r"] === actual_r){
+                let x = result["x"] * 100 / result["r"];
+                let y = -(result["y"] * 100 / result["r"]);
+                let radius = 5;
+                ctx.beginPath(); // Начинаем новый путь
+                ctx.arc(x, y, radius, 0, Math.PI * 2); // Параметры: x, y, радиус, начальный угол, конечный угол
+                ctx.fillStyle = result["isHit"]?"green":"red"; // Цвет заливки
+                ctx.fill(); // Заливаем кружок цветом
+                ctx.closePath();
+            }
+        }
+    }
     ctx.translate(-canvas.width / 2, -canvas.height / 2);
 }
 
+function sendCanvasCoordinates(x, y) {
+    // Вызов remoteCommand с передачей параметров
+    sendCoordinates([{name: 'x', value: x}, {name: 'y', value: y}]);
+}
+
+function handleCanvasClick(event) {
+    const canvas = document.getElementById("graph");
+    const dim = canvas.getBoundingClientRect();
+
+    // Получаем координаты клика
+    const x = event.clientX - dim.left - 150;
+    const y = -(event.clientY - dim.top - 150);
+    console.log(x, y)
+
+    // Передаём координаты через remoteCommand
+    sendCanvasCoordinates(x, y);
+}
+
+function coveringRedrow(event) {
+    if (event.status === "success" && actual_r != null) {
+        redraw();
+    }
+}
+
+function redraw() {
+    updateGraph();
+}
+
+function drawDots(data) {
+    actual_data = data;
+    graphSetup();
+};
 

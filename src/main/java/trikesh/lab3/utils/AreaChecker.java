@@ -1,4 +1,4 @@
-package trikesh.lab3_dup.utils;
+package trikesh.lab3.utils;
 
 public class AreaChecker {
     public static Boolean checkArea(Double x, Double y, Double r) {

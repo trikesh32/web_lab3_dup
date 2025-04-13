@@ -55,28 +55,28 @@
         <div class="r-input">
             <fieldset>
                 <legend class="highlighted">Выберите R:</legend>
-                <p:selectBooleanCheckbox id="checkbox1" value="#{r.checkboxes[0]}" onchange="graphSetup(1)" >
-                    <p:ajax update="checkbox2 checkbox3 checkbox4 checkbox5" listener="#{r.selectCheckbox(0)}"/>
+                <p:selectBooleanCheckbox id="checkbox1" value="#{r.checkBox1}" onchange="graphSetup(1)" >
+                    <p:ajax update="checkbox2 checkbox3 checkbox4 checkbox5" listener="#{r.checkBox1Clicked()}"/>
                 </p:selectBooleanCheckbox>
                 <h:outputLabel for="checkbox1" value="1" />
 
-                <p:selectBooleanCheckbox id="checkbox2" value="#{r.checkboxes[1]}" onchange="graphSetup(2)">
-                    <p:ajax update="checkbox1 checkbox3 checkbox4 checkbox5" listener="#{r.selectCheckbox(1)}"/>
+                <p:selectBooleanCheckbox id="checkbox2" value="#{r.checkBox2}" onchange="graphSetup(2)">
+                    <p:ajax update="checkbox1 checkbox3 checkbox4 checkbox5" listener="#{r.checkBox2Clicked()}"/>
                 </p:selectBooleanCheckbox>
                 <h:outputLabel for="checkbox2" value="2" />
 
-                <p:selectBooleanCheckbox id="checkbox3" value="#{r.checkboxes[2]}" onchange="graphSetup(3)">
-                    <p:ajax update="checkbox1 checkbox2 checkbox4 checkbox5" listener="#{r.selectCheckbox(2)}"/>
+                <p:selectBooleanCheckbox id="checkbox3" value="#{r.checkBox3}" onchange="graphSetup(3)">
+                    <p:ajax update="checkbox1 checkbox2 checkbox4 checkbox5" listener="#{r.checkBox3Clicked()}"/>
                 </p:selectBooleanCheckbox>
                 <h:outputLabel for="checkbox3" value="3" />
 
-                <p:selectBooleanCheckbox id="checkbox4" value="#{r.checkboxes[3]}" onchange="graphSetup(4)">
-                    <p:ajax update="checkbox1 checkbox2 checkbox3 checkbox5" listener="#{r.selectCheckbox(3)}"/>
+                <p:selectBooleanCheckbox id="checkbox4" value="#{r.checkBox4}" onchange="graphSetup(4)">
+                    <p:ajax update="checkbox1 checkbox2 checkbox3 checkbox5" listener="#{r.checkBox4Clicked()}"/>
                 </p:selectBooleanCheckbox>
                 <h:outputLabel for="checkbox4" value="4" />
 
-                <p:selectBooleanCheckbox id="checkbox5" value="#{r.checkboxes[4]}" onchange="graphSetup(5)">
-                    <p:ajax update="checkbox1 checkbox2 checkbox3 checkbox4" listener="#{r.selectCheckbox(4)}"/>
+                <p:selectBooleanCheckbox id="checkbox5" value="#{r.checkBox5}" onchange="graphSetup(5)">
+                    <p:ajax update="checkbox1 checkbox2 checkbox3 checkbox4" listener="#{r.checkBox5Clicked()}"/>
                 </p:selectBooleanCheckbox>
                 <h:outputLabel for="checkbox5" value="5" />
 
@@ -86,9 +86,9 @@
             <canvas id="graph" width="300" height="300"></canvas>
         </div>
         <h:commandButton styleClass="submitButton" value="Проверить" action="#{actual.submit()}">
-            <f:ajax execute="@form" render="growl table" />
+            <f:ajax render="growl table" execute="@form" onevent="coveringRedrow"/>
         </h:commandButton>
-        <h:commandButton styleClass="submitButton"  value="Устал?" action="on-index"/>
+        <h:commandButton styleClass="submitButton"  value="Устал?" action="on-index" />
         <div id="result-wrapper">
             <p:dataTable id="table" value="#{resultsList.results}" var="attempt" styleClass="table">
                 <p:column headerText="X">
@@ -107,12 +107,27 @@
                 </p:column>
             </p:dataTable>
         </div>
+        <p:remoteCommand name="sendCoordinates" action="#{canvasBean.processCoordinate}" update="growl table" onsuccess="redraw()">
+            <f:param name="x" value="" />
+            <f:param name="y" value="" />
+        </p:remoteCommand>
     </h:form>
+
+
     <p:growl id="growl" showDetail="false"/>
 </h:body>
 
 <h:outputScript library="src" name="js/main.js"/>
+<h:panelGroup id="drawDotsPanel">
+    <h:outputScript>
+        drawDots(JSON.parse('#{resultsList.getResultsJson()}'));
+    </h:outputScript>
+</h:panelGroup>
+<p:remoteCommand name="updateGraph" update="drawDotsPanel" process="@this"/>
 <h:outputScript>
+    document.querySelector("canvas").addEventListener("click", function(event) {
+        handleCanvasClick(event);
+    })
     document.addEventListener("DOMContentLoaded", function () {
         graphSetup(#{actual.r});
     });

@@ -1,4 +1,4 @@
-package trikesh.lab3_dup;
+package trikesh.lab3;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,8 +12,19 @@ import java.io.Serializable;
 @Table(name = "result")
 public class Result implements Serializable {
     private static final long serialVersionUID = 1L;
+    public Result(Double x, Double y, Double r, Boolean isHit) {
+        this.x = x;
+        this.y = y;
+        this.r = r;
+        this.isHit = isHit;
+    }
+
+    public Result() {
+
+    }
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
+    @Column(name="id", unique = true)
     private Long id;
 
     @Column(name = "x", nullable = false)
@@ -25,17 +36,8 @@ public class Result implements Serializable {
     @Column(name = "r", nullable = false)
     private Double r;
 
-    @Column(name = "result", nullable = false)
+    @Column(name = "result")
     private Boolean isHit;
 
-    public Result(Double x, Double y, Double r, Boolean isHit) {
-        this.x = x;
-        this.y = y;
-        this.r = r;
-        this.isHit = isHit;
-    }
 
-    public Result() {
-
-    }
 }

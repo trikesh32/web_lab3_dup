@@ -1,4 +1,4 @@
-package trikesh.lab3_dup.convertors;
+package trikesh.lab3.convertors;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.component.UIComponent;

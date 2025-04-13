@@ -1,12 +1,19 @@
-package trikesh.lab3_dup;
+package trikesh.lab3;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.Setter;
-import trikesh.lab3.db.ResultDAO;
+import org.primefaces.PrimeFaces;
+import org.primefaces.context.PrimeRequestContext;
+import trikesh.lab3.utils.DBCommunicator;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,7 +24,8 @@ import java.util.ArrayList;
 @SessionScoped
 public class ResultsList implements Serializable {
     ArrayList<Result> results = new ArrayList<>();
-    private final ResultDAO resultDAO = new ResultDAO();
+
+    private DBCommunicator dbCommunicator = DBCommunicator.getInstance();
 
     public ResultsList() {
     }
@@ -25,7 +33,10 @@ public class ResultsList implements Serializable {
     @Transactional
     public void addResult(Result result) {
         results.add(result);
-        resultDAO.save(result);
-
+        dbCommunicator.sendOne(result);
+    }
+    public String getResultsJson(){
+        String json =  new GsonBuilder().create().toJson(results);
+        return json;
     }
 }

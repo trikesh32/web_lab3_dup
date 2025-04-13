@@ -1,7 +1,8 @@
-package trikesh.lab3_dup;
+package trikesh.lab3;
 
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import lombok.*;
@@ -12,7 +13,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Named("actual")
-@SessionScoped
+@ViewScoped
 public class Actual implements Serializable {
     private static final long serialVersionUID = 1L;
     private Double x;
